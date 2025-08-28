@@ -35,7 +35,7 @@ function App() {
         <div className="space-y-2">
           <h1 className="text-4xl font-space font-bold">Manhwa Tracker ✦︎</h1>
           <p className="text-muted-foreground">
-            Buttons, cards, and tables styled with your custom color tokens.
+            A manhwa tracker made for me ^-^ ✦︎ with Vite, React, TS, Shadcn ✦︎
           </p>
           <Button onClick={() => setAddManhwaOpen(true)}>
             Add Manhwa
