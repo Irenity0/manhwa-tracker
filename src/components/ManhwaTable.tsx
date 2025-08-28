@@ -1,4 +1,4 @@
- import * as React from "react"
+import * as React from "react";
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -10,10 +10,10 @@ import {
   type SortingState,
   useReactTable,
   type VisibilityState,
-} from "@tanstack/react-table"
-import { ChevronDown, MoreHorizontal } from "lucide-react"
+} from "@tanstack/react-table";
+import { ChevronDown, MoreHorizontal } from "lucide-react";
 
-import { Button } from "./ui/button"
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -22,8 +22,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu"
-import { Input } from "./ui/input"
+} from "./ui/dropdown-menu";
+import { Input } from "./ui/input";
 import {
   Table,
   TableBody,
@@ -31,7 +31,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./ui/table"
+} from "./ui/table";
 
 import {
   Sheet,
@@ -39,21 +39,26 @@ import {
   SheetHeader,
   SheetTitle,
   SheetDescription,
-} from "./ui/sheet"
+} from "./ui/sheet";
 
 type Manhwa = {
-  id: string
-  title: string
-  originalTitle: string
-  author: string
-  status: "ongoing" | "hiatus" | "completed" | "dropped"
-  genres: string[]
-  totalChapters: number
-  currentChapter: number
-  readingStatus: "reading" | "plan-to-read" | "completed" | "on-hold" | "dropped"
-  rating: number
-  notes: string[]
-}
+  id: string;
+  title: string;
+  originalTitle: string;
+  author: string;
+  status: "ongoing" | "hiatus" | "completed" | "dropped";
+  genres: string[];
+  totalChapters: number;
+  currentChapter: number;
+  readingStatus:
+    | "reading"
+    | "plan-to-read"
+    | "completed"
+    | "on-hold"
+    | "dropped";
+  rating: number;
+  notes: string[];
+};
 
 const initialData: Manhwa[] = [
   {
@@ -136,21 +141,34 @@ const initialData: Manhwa[] = [
   },
 ];
 
-
 const ManhwaTable = () => {
-  const [data, setData] = React.useState<Manhwa[]>(initialData)
-  const [sorting, setSorting] = React.useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [rowSelection, setRowSelection] = React.useState({})
-  const [selectedManhwa, setSelectedManhwa] = React.useState<Manhwa | null>(null)
-  const [newNote, setNewNote] = React.useState("")
+  const [data, setData] = React.useState<Manhwa[]>(initialData);
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
+  const [selectedManhwa, setSelectedManhwa] = React.useState<Manhwa | null>(
+    null
+  );
+  const [newNote, setNewNote] = React.useState("");
 
   const columns: ColumnDef<Manhwa>[] = [
-    {
-      accessorKey: "title",
-      header: "Title",
+  {
+    accessorKey: "title",
+    header: "Title",
+    cell: ({ row }) => {
+      const title = row.getValue("title") as string;
+      const truncated = title.length > 24 ? title.slice(0, 18) + "..." : title;
+      return (
+        <span>
+          {truncated}
+        </span>
+      );
     },
+  },
     {
       accessorKey: "originalTitle",
       header: "Original Title",
@@ -184,11 +202,11 @@ const ManhwaTable = () => {
     },
     {
       accessorKey: "totalChapters",
-      header: "Total Chapters",
+      header: "Total Ch.",
     },
     {
       accessorKey: "currentChapter",
-      header: "Current Chapter",
+      header: "Current Ch.",
     },
     {
       accessorKey: "readingStatus",
@@ -211,7 +229,7 @@ const ManhwaTable = () => {
           size="sm"
           onClick={() => setSelectedManhwa(row.original)}
         >
-          View Notes
+          Notes
         </Button>
       ),
     },
@@ -220,7 +238,7 @@ const ManhwaTable = () => {
       header: "Actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const manhwa = row.original
+        const manhwa = row.original;
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -231,12 +249,12 @@ const ManhwaTable = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => alert(`Editing ${manhwa.title}`)}>
+              <DropdownMenuItem
+                onClick={() => alert(`Editing ${manhwa.title}`)}
+              >
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => alert(`Delete ${manhwa.title}`)}
-              >
+              <DropdownMenuItem onClick={() => alert(`Delete ${manhwa.title}`)}>
                 Delete
               </DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -245,10 +263,10 @@ const ManhwaTable = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        )
+        );
       },
     },
-  ]
+  ];
 
   const table = useReactTable({
     data,
@@ -267,22 +285,20 @@ const ManhwaTable = () => {
       columnVisibility,
       rowSelection,
     },
-  })
+  });
 
   const addNote = () => {
-    if (!selectedManhwa || !newNote.trim()) return
+    if (!selectedManhwa || !newNote.trim()) return;
     setData((prev) =>
       prev.map((m) =>
-        m.id === selectedManhwa.id
-          ? { ...m, notes: [...m.notes, newNote] }
-          : m
+        m.id === selectedManhwa.id ? { ...m, notes: [...m.notes, newNote] } : m
       )
-    )
+    );
     setSelectedManhwa((prev) =>
       prev ? { ...prev, notes: [...prev.notes, newNote] } : prev
-    )
-    setNewNote("")
-  }
+    );
+    setNewNote("");
+  };
 
   return (
     <div className="w-full font-mono">
@@ -311,9 +327,7 @@ const ManhwaTable = () => {
                   key={column.id}
                   className="capitalize"
                   checked={column.getIsVisible()}
-                  onCheckedChange={(value) =>
-                    column.toggleVisibility(!!value)
-                  }
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
                 >
                   {column.id}
                 </DropdownMenuCheckboxItem>
@@ -329,7 +343,9 @@ const ManhwaTable = () => {
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead
+                    key={header.id}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -341,6 +357,7 @@ const ManhwaTable = () => {
               </TableRow>
             ))}
           </TableHeader>
+
           <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
@@ -349,8 +366,13 @@ const ManhwaTable = () => {
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    <TableCell
+                      key={cell.id}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -412,16 +434,34 @@ const ManhwaTable = () => {
 
               <div className="mt-4 ml-3 space-y-4">
                 <div className="gap-2 text-sm">
-                  <div><span className="font-semibold">Author:</span> {selectedManhwa.author}</div>
-                  <div><span className="font-semibold">Status:</span> {selectedManhwa.status}</div>
+                  <div>
+                    <span className="font-semibold">Author:</span>{" "}
+                    {selectedManhwa.author}
+                  </div>
+                  <div>
+                    <span className="font-semibold">Status:</span>{" "}
+                    {selectedManhwa.status}
+                  </div>
                   <div>
                     <span className="font-semibold">Genres:</span>{" "}
                     {selectedManhwa.genres.join(", ")}
                   </div>
-                  <div><span className="font-semibold">Total Chapters:</span> {selectedManhwa.totalChapters}</div>
-                  <div><span className="font-semibold">Current Chapter:</span> {selectedManhwa.currentChapter}</div>
-                  <div><span className="font-semibold">Reading Status:</span> {selectedManhwa.readingStatus}</div>
-                  <div><span className="font-semibold">Rating:</span> {"⭐".repeat(selectedManhwa.rating)}</div>
+                  <div>
+                    <span className="font-semibold">Total Chapters:</span>{" "}
+                    {selectedManhwa.totalChapters}
+                  </div>
+                  <div>
+                    <span className="font-semibold">Current Chapter:</span>{" "}
+                    {selectedManhwa.currentChapter}
+                  </div>
+                  <div>
+                    <span className="font-semibold">Reading Status:</span>{" "}
+                    {selectedManhwa.readingStatus}
+                  </div>
+                  <div>
+                    <span className="font-semibold">Rating:</span>{" "}
+                    {"⭐".repeat(selectedManhwa.rating)}
+                  </div>
                 </div>
 
                 <div className="border-t pt-4">
@@ -433,7 +473,9 @@ const ManhwaTable = () => {
                       ))}
                     </ul>
                   ) : (
-                    <p className="text-muted-foreground text-sm">No notes yet.</p>
+                    <p className="text-muted-foreground text-sm">
+                      No notes yet.
+                    </p>
                   )}
                   <div className="mt-2 flex gap-2">
                     <Input
@@ -450,7 +492,7 @@ const ManhwaTable = () => {
         </SheetContent>
       </Sheet>
     </div>
-  )
-}
+  );
+};
 
-export default ManhwaTable
+export default ManhwaTable;
