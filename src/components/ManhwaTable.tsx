@@ -254,6 +254,11 @@ const ManhwaTable: React.FC<ManhwaTableProps> = ({
       columnVisibility,
       rowSelection,
     },
+    initialState: {
+      pagination: {
+        pageSize: 7, // show 7 rows per page
+      },
+    },
   });
 
   return (
@@ -359,7 +364,13 @@ const ManhwaTable: React.FC<ManhwaTableProps> = ({
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-end space-x-2 py-4">
+      {/* Footer */}
+      <div className="flex items-center justify-between py-4">
+        <div className="text-sm text-muted-foreground">
+          Page {table.getState().pagination.pageIndex + 1} of{" "}
+          {table.getPageCount()}
+        </div>
+
         <div className="space-x-2">
           <Button
             variant="outline"
