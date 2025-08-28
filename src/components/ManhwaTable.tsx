@@ -76,7 +76,6 @@ const ManhwaTable: React.FC<ManhwaTableProps> = ({
   loading,
 }) => {
   const [error, setError] = React.useState<string | null>(null);
-
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -89,6 +88,7 @@ const ManhwaTable: React.FC<ManhwaTableProps> = ({
   );
   const [newNote, setNewNote] = React.useState("");
 
+  // add note Sheet
   const addNote = async () => {
     if (!selectedManhwa || !newNote.trim()) return;
 
@@ -114,6 +114,22 @@ const ManhwaTable: React.FC<ManhwaTableProps> = ({
     }
   };
 
+  // Delete Manhwa
+  const deleteManhwa = async (id: string, title: string) => {
+    if (!confirm(`Are you sure you want to delete "${title}"?`)) return;
+
+    try {
+      const { error } = await supabase.from("manhwa").delete().eq("id", id);
+      if (error) throw error;
+
+      refresh(); // refresh table data
+    } catch (err) {
+      console.error("[Error deleting manhwa]", err);
+      setError(err instanceof Error ? err.message : "Error deleting manhwa");
+    }
+  };
+
+  // Table Columns
   const columns: ColumnDef<Manhwa>[] = [
     {
       accessorKey: "manhwa_title",
@@ -196,14 +212,14 @@ const ManhwaTable: React.FC<ManhwaTableProps> = ({
             </DropdownMenuTrigger>
             <DropdownMenuContent className="space-y-2" align="end">
               <DropdownMenuItem
-              className="bg-primary/50 text-white"
+                className="bg-primary/50 text-white"
                 onClick={() => alert(`Editing ${manhwa.manhwa_title}`)}
               >
                 Edit
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="bg-destructive/50 text-white"
-                onClick={() => alert(`Delete ${manhwa.manhwa_title}`)}
+                onClick={() => deleteManhwa(manhwa.id, manhwa.manhwa_title)}
               >
                 Delete
               </DropdownMenuItem>
@@ -218,6 +234,7 @@ const ManhwaTable: React.FC<ManhwaTableProps> = ({
     },
   ];
 
+  // TanStack React Table
   const table = useReactTable({
     data,
     columns,
