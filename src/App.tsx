@@ -33,7 +33,7 @@ function App() {
     <>
       <section className="min-h-screen bg-background text-foreground p-8 space-y-8">
         <div className="space-y-2">
-          <h1 className="text-4xl font-space fon-bold">Manhwa Tracker ✦︎</h1>
+          <h1 className="text-4xl font-space font-bold">Manhwa Tracker ✦︎</h1>
           <p className="text-muted-foreground">
             Buttons, cards, and tables styled with your custom color tokens.
           </p>

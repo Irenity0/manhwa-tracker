@@ -41,6 +41,7 @@ import {
 } from "./ui/sheet";
 
 import { supabase } from "@/lib/supabase";
+import { EditManhwaForm } from "./EditManhwaForm";
 
 // Updated interface for snake_case columns
 export interface Manhwa {
@@ -77,6 +78,7 @@ const ManhwaTable: React.FC<ManhwaTableProps> = ({
 }) => {
   const [error, setError] = React.useState<string | null>(null);
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [editingManhwa, setEditingManhwa] = React.useState<Manhwa | null>(null);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -213,7 +215,7 @@ const ManhwaTable: React.FC<ManhwaTableProps> = ({
             <DropdownMenuContent className="space-y-2" align="end">
               <DropdownMenuItem
                 className="bg-primary/50 text-white"
-                onClick={() => alert(`Editing ${manhwa.manhwa_title}`)}
+                onClick={() => setEditingManhwa(manhwa)}
               >
                 Edit
               </DropdownMenuItem>
@@ -295,7 +297,7 @@ const ManhwaTable: React.FC<ManhwaTableProps> = ({
       {error && <p className="text-sm text-red-500">{error}</p>}
 
       {/* Table */}
-      <div className="overflow-hidden rounded-md border">
+      <div className="overflow-hidden rounded-md scrollbar-thin scrollbar-thumb-muted scrollbar-track-background border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -377,6 +379,24 @@ const ManhwaTable: React.FC<ManhwaTableProps> = ({
           </Button>
         </div>
       </div>
+
+      <Sheet
+        open={!!editingManhwa}
+        onOpenChange={(open) => !open && setEditingManhwa(null)}
+      >
+        <SheetContent side="right" className="w-[700px]! min-w-md px-4">
+          <SheetHeader>
+            <SheetTitle>Edit {editingManhwa?.manhwa_title}</SheetTitle>
+          </SheetHeader>
+          {editingManhwa && (
+            <EditManhwaForm
+              manhwa={editingManhwa}
+              onClose={() => setEditingManhwa(null)}
+              onUpdated={refresh}
+            />
+          )}
+        </SheetContent>
+      </Sheet>
 
       {/* Notes + Info Sheet */}
       <Sheet
