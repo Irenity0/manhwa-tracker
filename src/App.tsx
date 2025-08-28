@@ -37,7 +37,7 @@ function App() {
           <p className="text-muted-foreground">
             Buttons, cards, and tables styled with your custom color tokens.
           </p>
-          <Button onClick={() => setAddManhwaOpen(true)} className="mb-4">
+          <Button onClick={() => setAddManhwaOpen(true)}>
             Add Manhwa
           </Button>
 
@@ -47,7 +47,6 @@ function App() {
             onAdded={fetchManhwa} // refresh table after adding
           />
         </div>
-
         <ManhwaTable
           loading={loading}
           data={manhwaData}

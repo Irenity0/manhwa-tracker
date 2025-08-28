@@ -262,7 +262,7 @@ const ManhwaTable: React.FC<ManhwaTableProps> = ({
   });
 
   return (
-    <div className="w-full font-mono">
+    <div className="w-full -mt-7 font-mono">
       {/* Filter + Column Toggle */}
       <div className="flex items-center py-4">
         <Input
